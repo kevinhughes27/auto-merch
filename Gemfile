@@ -4,7 +4,6 @@ gem 'rails', '4.2.4'
 gem 'unicorn'
 gem 'sidekiq'
 gem 'capybara'
-gem 'selenium-webdriver'
 gem 'attr_encrypted'
 gem 'uuid'
 
@@ -18,10 +17,12 @@ gem 'turbolinks'
 gem 'twitter', '5.14.0'
 
 group :production do
+  gem 'poltergeist'
   gem 'pg'
 end
 
 group :development, :test do
+  gem 'selenium-webdriver'
   gem 'sqlite3'
   gem 'byebug'
   gem 'mocha', require: false

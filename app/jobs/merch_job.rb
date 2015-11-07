@@ -8,7 +8,11 @@ class MerchJob < ActiveJob::Base
     tweet_body = params[:tweet_body]
     tweet_id = params[:tweet_id]
 
-    session = Capybara::Session.new(:selenium)
+    session = if Rails.env.development?
+      Capybara::Session.new(:selenium)
+    else
+      Capybara::Session.new(:poltergeist)
+    end
 
     # merchify login page
     session.visit "https://www.merchify.com/home"

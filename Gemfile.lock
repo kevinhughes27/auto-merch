@@ -74,6 +74,7 @@ GEM
       timers (>= 4.1.1)
     childprocess (0.5.6)
       ffi (~> 1.0, >= 1.0.11)
+    cliver (0.3.2)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -142,6 +143,11 @@ GEM
     omniauth-shopify-oauth2 (1.1.10)
       omniauth-oauth2 (~> 1.2)
     pg (0.18.3)
+    poltergeist (1.7.0)
+      capybara (~> 2.1)
+      cliver (~> 0.3.1)
+      multi_json (~> 1.0)
+      websocket-driver (>= 0.2.0)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -247,6 +253,9 @@ GEM
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
     websocket (1.2.2)
+    websocket-driver (0.6.3)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.2)
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -262,6 +271,7 @@ DEPENDENCIES
   jquery-rails
   mocha
   pg
+  poltergeist
   rails (= 4.2.4)
   sass-rails (~> 5.0)
   selenium-webdriver
@@ -275,3 +285,6 @@ DEPENDENCIES
   unicorn
   uuid
   web-console (~> 2.0)
+
+BUNDLED WITH
+   1.10.6
