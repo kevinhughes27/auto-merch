@@ -5,7 +5,7 @@ class MerchJob < ActiveJob::Base
   include TwitterHelper
 
   def perform(params = {})
-    shop = Shop.find_by(shopify_domain: params[:shop_domain])
+    shop = Shop.find_by(shopify_domain: params[:shopify_domain])
     tweeter = params[:tweeter]
     tweet_body = params[:tweet_body]
     tweet_id = params[:tweet_id]
