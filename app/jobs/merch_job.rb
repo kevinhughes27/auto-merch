@@ -72,7 +72,7 @@ class MerchJob < ActiveJob::Base
       session.evaluate_script(
         "$('.redactor_editor > p')[0].innerHTML = 'Your tweet forever: #{tweet_body}'"
       )
-      session.find('#step1_btn').click
+      session.find('#step1_btn').trigger('click')
     rescue => e
       sleep_and_increment(e)
       retry
@@ -95,7 +95,7 @@ class MerchJob < ActiveJob::Base
     end
 
     begin
-      session.click_on("Next Step")
+      session.find("Next Step").trigger('click')
     rescue => e
       sleep_and_increment(e)
       retry
@@ -109,7 +109,7 @@ class MerchJob < ActiveJob::Base
       session.find('input[maxlength="6"]').set('5')
       price2 = session.first('input[maxlength="5"]')
       price2.set('5') if price2
-      session.click_on("Next Step")
+      session.find("Next Step").trigger('click')
     rescue => e
       sleep_and_increment(e)
       retry
@@ -120,9 +120,9 @@ class MerchJob < ActiveJob::Base
     reset_retry_counter
     begin
       begin
-        session.click_on("Save Changes")
+        session.find("Save Changes").trigger('click')
       rescue => e
-        session.click_on("Save Product")
+        session.find("Save Product").trigger('click')
       end
     rescue => e
       sleep_and_increment(e)
