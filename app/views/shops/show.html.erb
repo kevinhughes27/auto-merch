@@ -10,6 +10,13 @@
 <h3>Settings</h3>
 
 <%= form_for @shop do |form| %>
+
+  <p>
+    Merchify uses the shop to authenticate.
+    We recommend creating a Merchify shop user
+    in Shopify and using those credentials here
+  </p>
+
   <%= form.label :merchify_username, 'Merchify username: '%>
   <br>
   <%= form.text_field :merchify_username %>
