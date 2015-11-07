@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20151107123920) do
   add_index "shops", ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
 
   create_table "tweet_data", force: :cascade do |t|
-    t.integer  "since_id",   limit: 20, default: 1
+    t.integer  "since_id",   limit: 8, default: 1
     t.datetime "created_at"
     t.datetime "updated_at"
   end

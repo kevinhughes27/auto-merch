@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.4'
 gem 'unicorn'
 gem 'sidekiq'
+gem 'sinatra', :require => nil
+
 gem 'capybara'
 gem 'attr_encrypted'
 gem 'uuid'
