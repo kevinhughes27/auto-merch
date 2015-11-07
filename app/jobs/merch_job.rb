@@ -1,3 +1,5 @@
+require 'capybara/poltergeist'
+
 class MerchJob < ActiveJob::Base
   include WaitForAjax
   include TwitterHelper

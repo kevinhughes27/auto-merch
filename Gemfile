@@ -16,8 +16,9 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'twitter', '5.14.0'
 
+gem 'poltergeist'
+
 group :production do
-  gem 'poltergeist'
   gem 'pg'
 end
 
