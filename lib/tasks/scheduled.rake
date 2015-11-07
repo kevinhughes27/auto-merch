@@ -6,7 +6,8 @@ namespace :scheduled do
       MerchJob.perform_later(
         shopify_domain: 'merchmytweet.myshopify.com',
         tweeter: tweet.user.screen_name,
-        tweet_body: tweet.text
+        tweet_body: tweet.text,
+        tweet_id: tweet.id
       )
 
       puts tweet.id

@@ -5,6 +5,7 @@ class MerchJob < ActiveJob::Base
     shop = Shop.find_by(shopify_domain: params[:shop_domain])
     tweeter = params[:tweeter]
     tweet_body = params[:tweet_body]
+    tweet_id = params[:tweet_id]
 
     session = Capybara::Session.new(:selenium)
 
