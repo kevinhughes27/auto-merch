@@ -145,6 +145,7 @@ class MerchJob < ActiveJob::Base
 
   private
 
+  # shhhh nothing to see here
   def sleep_retry_and_increment
     @retry_counter += 1
 
