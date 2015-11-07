@@ -5,7 +5,7 @@ class MerchJob < ActiveJob::Base
   include WaitForAjax
   include TwitterHelper
 
-  MAX_RETRIES_PER_BLOCK = 10
+  MAX_RETRIES_PER_BLOCK = 5
 
   def perform(params = {})
     reset_retry_counter
