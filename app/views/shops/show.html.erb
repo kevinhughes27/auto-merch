@@ -1,0 +1,28 @@
+<script type="text/javascript">
+  ShopifyApp.ready(function(){
+    ShopifyApp.Bar.initialize({
+      title: "Home",
+      icon: "<%= asset_path('favicon.ico') %>"
+    });
+  });
+</script>
+
+<h3>Settings</h3>
+
+<%= form_for @shop do |form| %>
+  <%= form.label :merchify_username, 'Merchify username: '%>
+  <br>
+  <%= form.text_field :merchify_username %>
+
+  <br>
+  <br>
+
+  <%= form.label :merchify_password, 'Merchify password: '%>
+  <br>
+  <%= form.password_field :merchify_password %>
+
+  <br>
+  <br>
+
+  <%= form.submit 'Save' %>
+<% end %>
