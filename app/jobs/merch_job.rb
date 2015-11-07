@@ -74,6 +74,7 @@ class MerchJob < ActiveJob::Base
 
       file = File.open("tmp/#{tweet_id}.png", 'wb')
       file << open("http://www.tweetpng.com/#{tweeter}/tweet/#{tweet_id}.png").read
+      Image.resize(file.path, file.path, 4200, 4800)
       file_uploads = session.all('input[type="file"]', visible: false)
       file_uploads.each{ |f| f.set(Rails.root.join(file.path)) }
 
