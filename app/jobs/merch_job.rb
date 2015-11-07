@@ -89,7 +89,12 @@ class MerchJob < ActiveJob::Base
       Image.resize(file.path, file.path, 4200, 4800)
       file_uploads = session.all('input[type="file"]', visible: false)
       file_uploads.each{ |f| f.set(Rails.root.join(file.path)) }
+    rescue => e
+      sleep_and_increment(e)
+      retry
+    end
 
+    begin
       session.click_on("Next Step")
     rescue => e
       sleep_and_increment(e)
