@@ -11,7 +11,6 @@ class MerchJob < ActiveJob::Base
     tweet_id = params[:tweet_id]
 
     debug = false
-
     session = if debug
       Capybara::Session.new(:selenium)
     else
