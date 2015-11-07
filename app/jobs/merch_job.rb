@@ -5,7 +5,11 @@ class MerchJob < ActiveJob::Base
   include WaitForAjax
   include TwitterHelper
 
+  MAX_RETRIES_PER_BLOCK = 10
+
   def perform(params = {})
+    reset_retry_counter
+
     shop = Shop.find_by(shopify_domain: params[:shopify_domain])
     tweeter = params[:tweeter]
     tweet_body = params[:tweet_body]
@@ -34,17 +38,18 @@ class MerchJob < ActiveJob::Base
 
     # merchify product create index
     Rails.logger.info "merchify product create index"
+    reset_retry_counter
     begin
       session.has_content?('Create a new product')
       products = session.all('.create_product_link')
       products.sample.click
     rescue => e
-      sleep(1)
-      retry
+      sleep_retry_and_increment
     end
 
     # merchify product create step 1
     Rails.logger.info "merchify product create step 1"
+    reset_retry_counter
     begin
       session.has_content?('Create a new')
       session.fill_in('title', with: "Merch for #{tweeter}")
@@ -54,12 +59,12 @@ class MerchJob < ActiveJob::Base
       )
       session.find('#step1_btn').click
     rescue => e
-      sleep(1)
-      retry
+      sleep_retry_and_increment
     end
 
     # merchify product create step 2
     Rails.logger.info "merchify product create step 2"
+    reset_retry_counter
     begin
       session.has_content?('Upload a file')
       byebug
@@ -71,12 +76,12 @@ class MerchJob < ActiveJob::Base
 
       session.click_on("Next Step")
     rescue => e
-      sleep(1)
-      retry
+      sleep_retry_and_increment
     end
 
     # merchify product create step 3
     Rails.logger.info "merchify product create step 3"
+    reset_retry_counter
     begin
       session.has_content?("Fill out the mark up price and we'll auto configure your prices.")
       session.find('input[maxlength="6"]').set('5')
@@ -84,12 +89,12 @@ class MerchJob < ActiveJob::Base
       price2.set('5') if price2
       session.click_on("Next Step")
     rescue => e
-      sleep(1)
-      retry
+      sleep_retry_and_increment
     end
 
     # merchify product create step 4
     Rails.logger.info "merchify product create step 4"
+    reset_retry_counter
     begin
       begin
         session.click_on("Save Changes")
@@ -97,8 +102,7 @@ class MerchJob < ActiveJob::Base
         session.click_on("Save Product")
       end
     rescue => e
-      sleep(1)
-      retry
+      sleep_retry_and_increment
     end
 
     # save complete
@@ -128,6 +132,25 @@ class MerchJob < ActiveJob::Base
   rescue => e
     byebug if Rails.env.development? || Rails.env.test?
     Rails.logger.error ("#{e.class} -- #{e.message}")
+
+    retry_job
+  end
+
+  private
+
+  def sleep_retry_and_increment
+    @retry_counter += 1
+
+    if @retry_counter >= MAX_RETRIES_PER_BLOCK
+      raise
+    end
+
+    sleep(1)
+    retry
+  end
+
+  def reset_retry_counter
+    @retry_counter = 0
   end
 
 end
