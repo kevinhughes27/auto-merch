@@ -1,7 +1,7 @@
 class CreateTweetData < ActiveRecord::Migration
   def change
     create_table :tweet_data do |t|
-      t.integer :since_id, limit: 20
+      t.bigint :since_id
       t.string :search_query
     end
   end
