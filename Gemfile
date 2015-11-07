@@ -6,6 +6,7 @@ gem 'sidekiq'
 gem 'capybara'
 gem 'attr_encrypted'
 gem 'uuid'
+gem "ImageResize", "~> 0.0.5"
 
 gem 'shopify_app', '6.3.0'
 
@@ -17,7 +18,6 @@ gem 'turbolinks'
 gem 'twitter', '5.14.0'
 
 gem 'poltergeist'
-gem 'byebug'
 
 group :production do
   gem 'pg'

@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    ImageResize (0.0.5)
     actionmailer (4.2.4)
       actionpack (= 4.2.4)
       actionview (= 4.2.4)
@@ -263,6 +264,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ImageResize (~> 0.0.5)
   attr_encrypted
   byebug
   capybara
