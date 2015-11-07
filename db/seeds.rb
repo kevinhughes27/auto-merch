@@ -6,4 +6,4 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-TweetData.create!(since_id: 662945435372396544, search_query: "#hackjunction")
+TweetData.create!(since_id: 1)

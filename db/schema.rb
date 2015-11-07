@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151107115558) do
+ActiveRecord::Schema.define(version: 20151107123920) do
 
   create_table "shops", force: :cascade do |t|
     t.string   "shopify_domain",              null: false
@@ -25,8 +25,9 @@ ActiveRecord::Schema.define(version: 20151107115558) do
   add_index "shops", ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
 
   create_table "tweet_data", force: :cascade do |t|
-    t.integer "since_id",     limit: 20
-    t.string  "search_query"
+    t.integer  "since_id",   limit: 20, default: 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
