@@ -10,11 +10,12 @@ module TwitterHelper
   }
 
   @tweet_text = {
-    :tshirt => "Your personalized #{@emoji[:tshirt]} is waiting for you! #{@emoji[:gift]} #{@emoji[:smile]}",
-    :mug => "Show off to your friends with your own #{@emoji[:mug]} glass."
+    :tshirt => "your personalized #{@emoji[:tshirt]} is waiting for you! #{@emoji[:gift]} #{@emoji[:smile]}",
+    :mug => "show off to your friends with your own #{@emoji[:mug]}."
   }
 
-  def tweet(tweeter, product_url)
-    $twitter.update("#{tweeter} #{@tweet_text(:mug)} #{product_url}")
+  def self.tweet(tweeter, reply_tweetid, product_url)
+    $twitter.update("@#{tweeter} #{@tweet_text[:tshirt]} #{product_url}", in_reply_to_status_id: reply_tweetid)
+    #puts "@#{tweeter} #{@tweet_text[:tshirt]} #{product_url}"
   end
 end

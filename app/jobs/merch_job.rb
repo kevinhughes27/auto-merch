@@ -1,5 +1,6 @@
 class MerchJob < ActiveJob::Base
   include WaitForAjax
+  include TwitterHelper
 
   def perform(params = {})
     shop = Shop.find_by(shopify_domain: params[:shop_domain])
@@ -81,6 +82,8 @@ class MerchJob < ActiveJob::Base
 
     product_url = session.find('.google__url').text
     # queue the next job!
+
+    TwitterHelper.tweet(tweeter, tweet_id, product_url)
 
   rescue => e
     Rails.logger.error ("#{e.class} -- #{e.message}")
