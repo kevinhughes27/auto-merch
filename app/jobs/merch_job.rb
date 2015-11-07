@@ -48,7 +48,8 @@ class MerchJob < ActiveJob::Base
       products = session.all('.create_product_link')
       products.sample.click
     rescue => e
-      sleep_retry_and_increment
+      sleep_and_increment(e)
+      retry
     end
 
     # merchify product create step 1
@@ -63,7 +64,8 @@ class MerchJob < ActiveJob::Base
       )
       session.find('#step1_btn').click
     rescue => e
-      sleep_retry_and_increment
+      sleep_and_increment(e)
+      retry
     end
 
     # merchify product create step 2
@@ -80,7 +82,8 @@ class MerchJob < ActiveJob::Base
 
       session.click_on("Next Step")
     rescue => e
-      sleep_retry_and_increment
+      sleep_and_increment(e)
+      retry
     end
 
     # merchify product create step 3
@@ -93,7 +96,8 @@ class MerchJob < ActiveJob::Base
       price2.set('5') if price2
       session.click_on("Next Step")
     rescue => e
-      sleep_retry_and_increment
+      sleep_and_increment(e)
+      retry
     end
 
     # merchify product create step 4
@@ -106,7 +110,8 @@ class MerchJob < ActiveJob::Base
         session.click_on("Save Product")
       end
     rescue => e
-      sleep_retry_and_increment
+      sleep_and_increment(e)
+      retry
     end
 
     # save complete
@@ -146,7 +151,9 @@ class MerchJob < ActiveJob::Base
   private
 
   # shhhh nothing to see here
-  def sleep_retry_and_increment
+  def sleep_and_increment(e)
+    Rails.logger.error ("#{e.class} -- #{e.message}")
+
     @retry_counter += 1
 
     if @retry_counter >= MAX_RETRIES_PER_BLOCK
@@ -154,7 +161,6 @@ class MerchJob < ActiveJob::Base
     end
 
     sleep(1)
-    retry
   end
 
   def reset_retry_counter
