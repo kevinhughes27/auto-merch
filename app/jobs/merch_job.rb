@@ -43,6 +43,7 @@ class MerchJob < ActiveJob::Base
     end
 
     products = session.all('.create_product_link')
+    byebug
     products.sample.click
 
     # merchify product create step 1

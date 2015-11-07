@@ -17,6 +17,7 @@ gem 'turbolinks'
 gem 'twitter', '5.14.0'
 
 gem 'poltergeist'
+gem 'byebug'
 
 group :production do
   gem 'pg'
