@@ -8,4 +8,8 @@ class TweetData < ActiveRecord::Base
     first.search_query
   end
 
+  def self.update_since_id(since_id)
+    first.update_attributes!(since_id: since_id)
+  end
+
 end
