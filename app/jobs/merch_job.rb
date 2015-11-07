@@ -29,16 +29,26 @@ class MerchJob < ActiveJob::Base
 
     # merchify login page
     Rails.logger.info "merchify login page"
-    session.visit "https://www.merchify.com/home"
-    session.click_on('Login')
-    session.fill_in('shop', with: shop.shopify_domain)
-    session.find('input[type="submit"]').click
+    begin
+      session.visit "https://www.merchify.com/home"
+      session.click_on('Login')
+      session.fill_in('shop', with: shop.shopify_domain)
+      session.find('input[type="submit"]').click
+    rescue => e
+      sleep_and_increment(e)
+      retry
+    end
 
     # shopify login page
     Rails.logger.info "shopify login page"
-    session.fill_in('login', with: shop.merchify_username)
-    session.fill_in('password', with: shop.merchify_password)
-    session.click_on('Log in')
+    begin
+      session.fill_in('login', with: shop.merchify_username)
+      session.fill_in('password', with: shop.merchify_password)
+      session.click_on('Log in')
+    rescue => e
+      sleep_and_increment(e)
+      retry
+    end
 
     # merchify product create index
     Rails.logger.info "merchify product create index"
