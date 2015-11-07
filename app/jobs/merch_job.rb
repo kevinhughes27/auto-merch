@@ -36,53 +36,70 @@ class MerchJob < ActiveJob::Base
 
     # merchify product create index
     Rails.logger.info "merchify product create index"
-    sleep(1)
     begin
       session.has_content?('Create a new product')
+      products = session.all('.create_product_link')
+      products.sample.click
     rescue
       sleep(1)
       retry
     end
 
-    products = session.all('.create_product_link')
-    byebug
-    products.sample.click
-
     # merchify product create step 1
     Rails.logger.info "merchify product create step 1"
-    session.has_content?('Create a new')
-    session.fill_in('title', with: "Merch for #{tweeter}")
-    session.fill_in('sku', with: UUID.new.generate)
-    session.evaluate_script(
-      "$('.redactor_editor > p')[0].innerHTML = 'Your tweet forever: #{tweet_body}'"
-    )
-    session.find('#step1_btn').click
+    begin
+      session.has_content?('Create a new')
+      session.fill_in('title', with: "Merch for #{tweeter}")
+      session.fill_in('sku', with: UUID.new.generate)
+      session.evaluate_script(
+        "$('.redactor_editor > p')[0].innerHTML = 'Your tweet forever: #{tweet_body}'"
+      )
+      session.find('#step1_btn').click
+    rescue
+      sleep(1)
+      retry
+    end
 
     # merchify product create step 2
     Rails.logger.info "merchify product create step 2"
-    session.has_content?('Upload a file')
+    begin
+      session.has_content?('Upload a file')
 
-    open('image.png', 'wb') do |file|
-      file << open("http://www.tweetpng.com/#{tweeter}/tweet/#{tweet_id}.png").read
-      file_uploads = session.all('input[type="file"]', visible: false)
-      file_uploads.each{ |f| f.set(file) }
+      open('image.png', 'wb') do |file|
+        file << open("http://www.tweetpng.com/#{tweeter}/tweet/#{tweet_id}.png").read
+        file_uploads = session.all('input[type="file"]', visible: false)
+        file_uploads.each{ |f| f.set(file) }
+      end
+      session.click_on("Next Step")
+    rescue
+      sleep(1)
+      retry
     end
-    session.click_on("Next Step")
 
     # merchify product create step 3
     Rails.logger.info "merchify product create step 3"
-    session.has_content?("Fill out the mark up price and we'll auto configure your prices.")
-    session.find('input[maxlength="6"]').set('5')
-    price2 = session.first('input[maxlength="5"]')
-    price2.set('5') if price2
-    session.click_on("Next Step")
+    begin
+      session.has_content?("Fill out the mark up price and we'll auto configure your prices.")
+      session.find('input[maxlength="6"]').set('5')
+      price2 = session.first('input[maxlength="5"]')
+      price2.set('5') if price2
+      session.click_on("Next Step")
+    rescue
+      sleep(1)
+      retry
+    end
 
     # merchify product create step 4
     Rails.logger.info "merchify product create step 4"
     begin
-      session.click_on("Save Changes")
+      begin
+        session.click_on("Save Changes")
+      rescue
+        session.click_on("Save Product")
+      end
     rescue
-      session.click_on("Save Product")
+      sleep(1)
+      retry
     end
 
     # save complete
