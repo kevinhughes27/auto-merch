@@ -18,7 +18,7 @@ class MerchJob < ActiveJob::Base
       session = Capybara::Session.new(:selenium)
     else
       session = Capybara::Session.new(:poltergeist)
-      session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1" }
+      session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.8 Safari/534.34" }
     end
 
     # merchify login page
