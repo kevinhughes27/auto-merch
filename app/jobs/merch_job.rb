@@ -72,7 +72,7 @@ class MerchJob < ActiveJob::Base
       session.evaluate_script(
         "$('.redactor_editor > p')[0].innerHTML = 'Your tweet forever: #{tweet_body}'"
       )
-      session.find(:link_or_button, '#step1_btn').trigger('click')
+      session.find('#step1_btn').click
     rescue => e
       sleep_and_increment(e)
       retry
