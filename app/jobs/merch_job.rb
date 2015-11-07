@@ -116,21 +116,23 @@ class MerchJob < ActiveJob::Base
 
     # shopify
     Rails.logger.info "shopify"
+    # old selenium code
     #shopify_page = session.driver.browser.window_handles.last
     #session.driver.browser.switch_to.window(shopify_page)
     session.switch_to_window(session.windows.last)
     product_id = session.current_url.split('/').last
+    product_url = ""
 
     shop.with_shopify_session do
-      ShopifyAPI::Product.new({
+      product = ShopifyAPI::Product.new({
         id: product_id,
         published_at: Time.now - 1.day
-      }).save
+      })
+      product.save
+      product_url = "#{shop.shopify_domain}/products/#{product.handle}"
     end
 
-    product_url = session.find('.google__url').text
     Rails.logger.info "product_url: #{product_url}"
-
     TwitterHelper.tweet(tweeter, tweet_id, product_url)
 
   rescue => e
