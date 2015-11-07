@@ -24,5 +24,12 @@ module MerchMyTweet
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    $twitter = config.twitter = Twitter::REST::Client.new do |config|
+      config.consumer_key        = "kJY0mpfGUNn0yZyN0uOmJbzlS"
+      config.consumer_secret     = "vBYtsTWD3wMJD49paxwMwPHGF61E0jRJhsGhXappqNKVVkua1R"
+      config.access_token        = "4133085867-ZlmnB8jQzbjA0BBjVlCAMj15QyPXnQEjl2o1Rni"
+      config.access_token_secret = "Xb3620seBIKF6AKzfn59z2Yh9NURGuGeLXd2Ebbes66hK"
+    end
   end
 end
