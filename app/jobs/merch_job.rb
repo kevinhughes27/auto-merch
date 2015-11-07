@@ -67,7 +67,6 @@ class MerchJob < ActiveJob::Base
     reset_retry_counter
     begin
       session.has_content?('Upload a file')
-      byebug
 
       file = File.open("tmp/#{tweet_id}.png", 'wb')
       file << open("http://www.tweetpng.com/#{tweeter}/tweet/#{tweet_id}.png").read
@@ -113,8 +112,9 @@ class MerchJob < ActiveJob::Base
 
     # shopify
     Rails.logger.info "shopify"
-    shopify_page = session.driver.browser.window_handles.last
-    session.driver.browser.switch_to.window(shopify_page)
+    #shopify_page = session.driver.browser.window_handles.last
+    #session.driver.browser.switch_to.window(shopify_page)
+    session.switch_to_window(session.windows.last)
     product_id = session.current_url.split('/').last
 
     shop.with_shopify_session do
