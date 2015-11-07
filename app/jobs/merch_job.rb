@@ -64,12 +64,13 @@ class MerchJob < ActiveJob::Base
     Rails.logger.info "merchify product create step 2"
     begin
       session.has_content?('Upload a file')
-      open('image.png', 'w+b') do |file|
-        byebug
-        file << open("http://www.tweetpng.com/#{tweeter}/tweet/#{tweet_id}.png").read
-        file_uploads = session.all('input[type="file"]', visible: false)
-        file_uploads.each{ |f| f.set(file) }
-      end
+      byebug
+
+      file = File.open("tmp/#{tweet_id}.png", 'wb')
+      file << open("http://www.tweetpng.com/#{tweeter}/tweet/#{tweet_id}.png").read
+      file_uploads = session.all('input[type="file"]', visible: false)
+      file_uploads.each{ |f| f.set(Rails.root.join(file.path)) }
+
       session.click_on("Next Step")
     rescue => e
       sleep(1)
