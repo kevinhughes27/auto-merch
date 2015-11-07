@@ -26,7 +26,7 @@ class MerchJob < ActiveJob::Base
       session.has_content?('Create a new product')
     rescue
       sleep(1)
-      session.has_content?('Create a new product')
+      retry
     end
 
     products = session.all('.create_product_link')
