@@ -11,7 +11,7 @@ class MerchJob < ActiveJob::Base
     tweet_body = params[:tweet_body]
     tweet_id = params[:tweet_id]
 
-    debug = false
+    debug = true
 
     session = nil
     if debug
@@ -40,7 +40,7 @@ class MerchJob < ActiveJob::Base
       session.has_content?('Create a new product')
       products = session.all('.create_product_link')
       products.sample.click
-    rescue
+    rescue => e
       sleep(1)
       retry
     end
@@ -55,7 +55,7 @@ class MerchJob < ActiveJob::Base
         "$('.redactor_editor > p')[0].innerHTML = 'Your tweet forever: #{tweet_body}'"
       )
       session.find('#step1_btn').click
-    rescue
+    rescue => e
       sleep(1)
       retry
     end
@@ -64,14 +64,14 @@ class MerchJob < ActiveJob::Base
     Rails.logger.info "merchify product create step 2"
     begin
       session.has_content?('Upload a file')
-
-      open('image.png', 'wb') do |file|
+      open('image.png', 'w+b') do |file|
+        byebug
         file << open("http://www.tweetpng.com/#{tweeter}/tweet/#{tweet_id}.png").read
         file_uploads = session.all('input[type="file"]', visible: false)
         file_uploads.each{ |f| f.set(file) }
       end
       session.click_on("Next Step")
-    rescue
+    rescue => e
       sleep(1)
       retry
     end
@@ -84,7 +84,7 @@ class MerchJob < ActiveJob::Base
       price2 = session.first('input[maxlength="5"]')
       price2.set('5') if price2
       session.click_on("Next Step")
-    rescue
+    rescue => e
       sleep(1)
       retry
     end
@@ -94,10 +94,10 @@ class MerchJob < ActiveJob::Base
     begin
       begin
         session.click_on("Save Changes")
-      rescue
+      rescue => e
         session.click_on("Save Product")
       end
-    rescue
+    rescue => e
       sleep(1)
       retry
     end
@@ -127,6 +127,7 @@ class MerchJob < ActiveJob::Base
     TwitterHelper.tweet(tweeter, tweet_id, product_url)
 
   rescue => e
+    byebug if Rails.env.development? || Rails.env.test?
     Rails.logger.error ("#{e.class} -- #{e.message}")
   end
 

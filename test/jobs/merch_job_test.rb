@@ -19,9 +19,10 @@ class MerchJobTest < ActiveSupport::TestCase
     product.expects(:save)
 
     @job.perform(
-      shop_domain: 'merchmytweet.myshopify.com',
+      shopify_domain: 'merchmytweet.myshopify.com',
       tweeter: 'kevinhughes27',
-      tweet_body: 'this is my proudest achievment!'
+      tweet_body: 'this is my proudest achievment!',
+      tweet_id: 663020147968450560
     )
   end
 
