@@ -11,10 +11,8 @@ class MerchJob < ActiveJob::Base
     tweet_body = params[:tweet_body]
     tweet_id = params[:tweet_id]
 
-    debug = true
-
     session = nil
-    if debug
+    if Rails.env.development? || Rails.env.test?
       session = Capybara::Session.new(:selenium)
     else
       session = Capybara::Session.new(:poltergeist)
