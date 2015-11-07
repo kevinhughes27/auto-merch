@@ -1,4 +1,5 @@
 require 'capybara/poltergeist'
+require 'open-uri'
 
 class MerchJob < ActiveJob::Base
   include WaitForAjax
@@ -57,9 +58,12 @@ class MerchJob < ActiveJob::Base
     # merchify product create step 2
     Rails.logger.info "merchify product create step 2"
     session.has_content?('Upload a file')
-    #session.attach_file('file', Rails.root.join('test/files/test_image.jpeg'), visible: false)
-    file_uploads = session.all('input[type="file"]', visible: false)
-    file_uploads.each{ |f| f.set(Rails.root.join('test/files/test_image.jpeg')) }
+
+    open('image.png', 'wb') do |file|
+      file << open("http://www.tweetpng.com/#{tweeter}/tweet/#{tweet_id}.png").read
+      file_uploads = session.all('input[type="file"]', visible: false)
+      file_uploads.each{ |f| f.set(file) }
+    end
     session.click_on("Next Step")
 
     # merchify product create step 3
