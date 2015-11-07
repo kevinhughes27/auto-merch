@@ -1,4 +1,5 @@
 class MerchJob < ActiveJob::Base
+  include WaitForAjax
 
   def perform(params = {})
     shop = Shop.find_by(shopify_domain: params[:shop_domain])
@@ -19,7 +20,14 @@ class MerchJob < ActiveJob::Base
     session.click_on('Log in')
 
     # merchify product create index
-    session.has_content?('Create a new product')
+    sleep(1)
+    begin
+      session.has_content?('Create a new product')
+    rescue
+      sleep(1)
+      session.has_content?('Create a new product')
+    end
+
     products = session.all('.create_product_link')
     products.sample.click
 
@@ -34,26 +42,47 @@ class MerchJob < ActiveJob::Base
 
     # merchify product create step 2
     session.has_content?('Upload a file')
-    session.attach_file('file', Rails.root.join('test/files/test_image.jpeg'), visible: false)
+    #session.attach_file('file', Rails.root.join('test/files/test_image.jpeg'), visible: false)
+    file_uploads = session.all('input[type="file"]', visible: false)
+    file_uploads.each{ |f| f.set(Rails.root.join('test/files/test_image.jpeg')) }
     session.click_on("Next Step")
 
     # merchify product create step 3
     session.has_content?("Fill out the mark up price and we'll auto configure your prices.")
-    price_div = session.find('.size_price_div')
     session.find('input[maxlength="6"]').set('5')
+    price2 = session.first('input[maxlength="5"]')
+    price2.set('5') if price2
     session.click_on("Next Step")
 
     # merchify product create step 4
-    session.click_on("Save Changes")
+    begin
+      session.click_on("Save Changes")
+    rescue
+      session.click_on("Save Product")
+    end
 
     # save complete
-    session.has_content?("Your product has been saved to Shopify.")
+    sleep(1)
+    wait_for_ajax(session)
     session.click_on("View my product in Shopify")
 
-    byebug
+    # shopify
+    shopify_page = session.driver.browser.window_handles.last
+    session.driver.browser.switch_to.window(shopify_page)
+    product_id = session.current_url.split('/').last
+
+    shop.with_shopify_session do
+      ShopifyAPI::Product.new({
+        id: product_id,
+        published_at: Time.now - 1.day
+      }).save
+    end
+
+    product_url = session.find('.google__url').text
+    # queue the next job!
 
   rescue => e
-    byebug
+    Rails.logger.error ("#{e.class} -- #{e.message}")
   end
 
 end

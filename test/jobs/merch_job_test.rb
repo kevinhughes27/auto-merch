@@ -14,6 +14,10 @@ class MerchJobTest < ActiveSupport::TestCase
   end
 
   test "run" do
+    product = mock()
+    ShopifyAPI::Product.expects(:new).returns(product)
+    product.expects(:save)
+
     @job.perform(
       shop_domain: 'merchmytweet.myshopify.com',
       tweeter: 'kevinhughes27',
