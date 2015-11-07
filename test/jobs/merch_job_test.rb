@@ -2,6 +2,9 @@ require 'test_helper'
 
 class MerchJobTest < ActiveSupport::TestCase
 
+  # from cmd on heroku
+  # MerchJob.new.perform(shopify_domain: 'merchmytweet.myshopify.com', tweeter: 'merchmytweet', tweet_id: 663020147968450560)
+
   def setup
     @shop = shops(:regular_shop)
 
