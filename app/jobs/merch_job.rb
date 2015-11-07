@@ -19,6 +19,10 @@ class MerchJob < ActiveJob::Base
     if Rails.env.development? || Rails.env.test?
       session = Capybara::Session.new(:selenium)
     else
+      Capybara.register_driver :poltergeist do |app|
+        Capybara::Poltergeist::Driver.new(app, js_errors: false)
+      end
+
       session = Capybara::Session.new(:poltergeist)
       session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1" }
     end
@@ -105,7 +109,7 @@ class MerchJob < ActiveJob::Base
     end
 
     # save complete
-    Rails.logger.info "save complete"
+    Rails.logger.info "saving"
     sleep(1)
     wait_for_ajax(session)
     session.click_on("View my product in Shopify")
